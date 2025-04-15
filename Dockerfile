@@ -10,5 +10,6 @@ EXPOSE 8083
 
 ENV JWT_SECRET=PRFT
 ENV SERVER_PORT=8083
+ENV ZIPKIN_URL=http://localhost:9411/
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
