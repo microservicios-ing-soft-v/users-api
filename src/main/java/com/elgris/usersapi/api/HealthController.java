@@ -7,6 +7,7 @@ import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedList;
