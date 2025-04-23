@@ -1,5 +1,6 @@
 package com.elgris.usersapi.api;
 
+import org.springframework.http.ResponseEntity;
 import com.elgris.usersapi.models.User;
 import com.elgris.usersapi.repository.UserRepository;
 import io.jsonwebtoken.Claims;
