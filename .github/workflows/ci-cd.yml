@@ -56,24 +56,25 @@ jobs:
           tags: ${{ env.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:${{ github.sha }},${{ env.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:latest
           context: .
 
-      - name: Deploy or Update Container App
+      - name: Create or Update Container App
         run: |
-          if az containerapp show --name ${{ env.SERVICE_NAME }} --resource-group ${{ env.RESOURCE_GROUP_NAME }} &> /dev/null; then
-            echo "Container App exists. Updating..."
+          # Comprobar si el Container App existe
+          if az containerapp show --name ${{ env.SERVICE_NAME }} --resource-group ${{ env.RESOURCE_GROUP_NAME }} &>/dev/null; then
+            echo "Container App ${{ env.SERVICE_NAME }} exists, updating..."
             az containerapp update \
               --name ${{ env.SERVICE_NAME }} \
               --resource-group ${{ env.RESOURCE_GROUP_NAME }} \
               --image ${{ env.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:${{ github.sha }}
           else
-            echo "Container App does not exist. Creating..."
+            echo "Container App ${{ env.SERVICE_NAME }} does not exist, creating..."
             az containerapp create \
               --name ${{ env.SERVICE_NAME }} \
               --resource-group ${{ env.RESOURCE_GROUP_NAME }} \
-              --environment ${{ env.CONTAINERAPPS_ENVIRONMENT }} \
+              --environment $(az keyvault secret show --vault-name ${{ env.KEY_VAULT_NAME }} --name container-app-environment-name --query value -o tsv) \
               --image ${{ env.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:${{ github.sha }} \
-              --target-port 80 \
-              --ingress external \
-              --registry-server ${{ env.ACR_LOGIN_SERVER }}
+              --registry-server ${{ env.ACR_LOGIN_SERVER }} \
+              --registry-username ${{ env.AZURE_CLIENT_ID }} \
+              --registry-password ${{ env.AZURE_CLIENT_SECRET }}
           fi
 
       - name: Azure Logout
