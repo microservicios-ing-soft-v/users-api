@@ -70,7 +70,7 @@ jobs:
             az containerapp create \
               --name ${{ env.SERVICE_NAME }} \
               --resource-group ${{ env.RESOURCE_GROUP_NAME }} \
-              --environment $(az keyvault secret show --vault-name ${{ env.KEY_VAULT_NAME }} --name container-app-environment-name --query value -o tsv) \
+              --environment ${{ env.CONTAINERAPPS_ENVIRONMENT }} \
               --image ${{ env.ACR_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:${{ github.sha }} \
               --registry-server ${{ env.ACR_LOGIN_SERVER }} \
               --registry-username ${{ env.AZURE_CLIENT_ID }} \
